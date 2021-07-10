@@ -1,0 +1,4 @@
+
+.env/
+registry_app/__pycache__
+registry_app/SECRET_app_config.py

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <title>Baby Registry</title>
+
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💩</text></svg>">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+
+  <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}">
+  </script>
+
+  <script src="{{ url_for('static', filename='js/socket.io.js') }}">
+  </script>
+
+</head>
+<body onload="">
+
+  <div id="title_container">
+    <div class="inline_div">
+      <h1>{{ names.name1 }}</h1>
+    </div>
+    <div class="inline_div" id="heart">
+    </div>
+    <div class="inline_div">
+      <h1>{{ names.name2 }}, and ...</h1>
+    </div>
+  </div>
+
+  <div id="content_container">
+
+    {% for key, value in data.items() %}
+      <div class="card" id="card_{{ key }}" onclick="window.open('{{ value.item_link }}', '_blank');">
+        <div class="item_title">
+          <h3 class="title" id="title_{{ key }}"><b>{{ value.title }}</b></h3>
+        </div>
+          <img class="item_image" src="{{ value.image_link }}" alt="Item Image">
+        <div class="item_description">
+          <h4 class="price"><b>${{ value.price }}</b></h4>
+          <p>{{ value.description }}</p>
+        </div>
+        <div class="purchase_button_container">
+          <!-- need an if statement here: if purchased: mark as purchased, else: mark as not purchased with green button -->
+          {% if value.purchased == 0 %}
+            <button type="button" id="button_{{ key }}" class="mark_item_as_purchased_button" onclick="event.stopPropagation(); determine_button_change({{ key }}, this.id);"><b>Click here to mark as purchased</b></button>
+          {% else %}
+            <button type="button" id="button_{{ key }}" class="already_purchased_button" onclick="event.stopPropagation(); determine_button_change({{ key }}, this.id);"><b>Purchased</b></button>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+
+  </div>
+
+  <div id="author">
+    Coded by:
+    <a rel="author" href="http://www.linkedin.com/in/jacob-lapenna-a550b123" target="_blank">
+      Jacob Lapenna
+    </a>
+  </div>
+
+  <script>
+
+    var socket =  io.connect(location.origin);
+    var red = getComputedStyle(document.documentElement).getPropertyValue('--red');
+    var green = getComputedStyle(document.documentElement).getPropertyValue('--green');
+    var not_purchased_html = "<b>Click here to mark as purchased</b>";
+    var purchased_html = "<b>Purchased</b>";
+
+    function determine_button_change(item, id) {
+      var element = document.getElementById(id);
+
+      if (element.innerHTML == not_purchased_html) {
+        mark_item_as_purchased(item, id);
+      };
+
+      if (element.innerHTML == purchased_html) {
+        i_am_a_fool_and_do_not_understand_simple_instructions(item, id);
+      }
+    }
+
+    function mark_item_as_purchased(item, id) {
+      socket.emit("mark_item_as_purchased", data={"item" : item, "button_id" : id});
+    }
+
+    function i_am_a_fool_and_do_not_understand_simple_instructions(item, id) {
+      socket.emit("mark_item_as_not_purchased", data={"item" : item, "button_id" : id});
+    }
+
+    socket.on("change_button_to_purchased", function (data) {
+      var id = data["button_id"];
+      var el = document.getElementById(id);
+      el.style.backgroundColor = red;
+      el.innerHTML = purchased_html;
+    });
+
+    socket.on("change_button_to_not_purchased", function (data) {
+      var id = data["button_id"];
+      var el = document.getElementById(id);
+      el.style.backgroundColor = green;
+      el.innerHTML = not_purchased_html;
+    });
+
+  </script>
+
+</body>
+</html>

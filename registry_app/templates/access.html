@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <title>Baby Registry</title>
+
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💩</text></svg>">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet">
+
+  <script src="{{ url_for('static', filename='js/jquery-3.6.0.min.js') }}">
+  </script>
+
+  <script src="{{ url_for('static', filename='js/socket.io.js') }}">
+  </script>
+
+</head>
+<body onload="">
+
+    <div id="title_container">
+      <div class="inline_div">
+        <h1>{{ names.name1 }}</h1>
+      </div>
+      <div class="inline_div" id="heart">
+      </div>
+      <div class="inline_div">
+        <h1>{{ names.name2 }}, and ...</h1>
+      </div>
+    </div>
+
+    <div id="content_container">
+
+      {% for key, value in data.items() %}
+        <div class="card" id="card_{{ key }}">
+          <div class="item_title">
+            <h3 class="title" id="title_{{ key }}"><b>{{ value.title }}</b></h3>
+          </div>
+            <img class="item_image" src="{{ value.image_link }}" alt="Item Image">
+          <div class="item_description">
+            <h4 class="price"><b>${{ value.price }}</b></h4>
+            <p>{{ value.description }}</p>
+          </div>
+          <div class="purchase_button_container">
+            <!-- need an if statement here: if purchased: mark as purchased, else: mark as not purchased with green button -->
+            {% if value.purchased == 0 %}
+              <button type="button" id="button_{{ key }}" class="mark_item_as_purchased_button"><b>Click here to mark as purchased</b></button>
+            {% else %}
+              <button type="button" id="button_{{ key }}" class="already_purchased_button"><b>Purchased</b></button>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+
+    <div id="author">
+      Coded by:
+      <a rel="author" href="http://www.linkedin.com/in/jacob-lapenna-a550b123" target="_blank">
+        Jacob Lapenna
+      </a>
+    </div>
+
+  <div id="overlay">
+    <div id="access_form_container">
+      <div id="access_form_title_container">
+        <h1> Welcome to Mindy and Jacob's baby registry!</h1>
+      </div>
+      <hr>
+      <div id="access_form_instruction_container">
+        <ol>
+          <li>Select the gift you wish to purchase.</li>
+          <br>
+          <li>Click the item's card to go directly to its online store and purchase with a gift receipt.</li>
+          <br>
+          <li>Once purchased, click the the item's "Click here to mark as purchased" button to prevent duplicate gifts.</li>
+          <br>
+          <li>
+            We have found many of the items on our registry available for much less money at consignment stores. Try checking a few of the following stores to save $$$$ while reducing our environmental impact.
+            <ul>
+              <br>
+              <li>Good Buy Gear - Arvada</li>
+              <li>Bumps & Bundles - Golden</li>
+              <li>True Colors Consignment for Kids - Lakewood</li>
+              <li>Kid to Kid - Arvada</li>
+              <li>Once Upon a Child - Centennial</li>
+            </ul>
+          </li>
+        </ol>
+        <br>
+        <br>
+      </div>
+      <div id="access_form_code_container">
+        <form method="POST" action="{{ url_for('gain_access') }}">
+          {{ form.csrf_token }}
+          {{ form.access_code.label }}
+          {{ form.access_code }}
+          {% if form.access_code.errors %}
+            {% for error in form.access_code.errors %}
+              <br>
+              <br>
+              <b style="color : red;">{{ error }}</b>
+              <br>
+              <br>
+            {% endfor %}
+          {% else %}
+            <br>
+            <br>
+          {% endif %}
+          <div id="captcha_container">
+            {{ form.recaptcha }}
+          </div>
+          <br>
+          <input id="access_form_submission" type="submit" value="Access Registry">
+        </form>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
