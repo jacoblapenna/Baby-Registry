@@ -28,3 +28,14 @@ class AccessCode:
     def get_access_code(self):
 
         return self.__access_code
+
+class Names(dict):
+
+    def __init__(self):
+
+        self.names = {
+            "name1" : """ parental-unit name 1 """,
+            "name2" : """ parental-unit name 2 """
+        }
+
+        super().__init__(self.names)
