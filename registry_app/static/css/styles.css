@@ -196,6 +196,21 @@ a:visited {
   background-color: var(--dark_color);
   text-align: center;
   color: var(--white);
+  overflow: scroll;
+}
+
+#access_form_container::-webkit-scrollbar {
+  display: none;
+}
+
+#access_form_container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+#access_form_title_container {
+  margin-left: 5%;
+  margin-right: 5%;
 }
 
 hr {
@@ -228,6 +243,7 @@ hr {
   background-color: var(--green);
   border-radius: 0.25em;
   color: var(--dark_color);
+  margin-bottom: 10%;
 }
 
 /* @media (pointer:coarse) {
