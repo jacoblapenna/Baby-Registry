@@ -245,17 +245,3 @@ hr {
   color: var(--dark_color);
   margin-bottom: 10%;
 }
-
-/* @media (pointer:coarse) {
-  .card {
-    display: inline-block;
-    font-size: 1.5em;
-    margin: 20px;
-    background-color: var(--white);
-    box-shadow: 0 4px 8px 0 var(--font);
-    border-radius: 2em;
-    transition: 0.3s;
-    width: 20%;
-    min-width: 650px;
-  }
-} */
